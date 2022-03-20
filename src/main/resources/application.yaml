@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
+        show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stampydb
+    username: postgres
+    password: postgres
+  flyway:
+    locations: classpath:db/migration
