@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -50,7 +49,7 @@ class StampControllerTest {
 
   @Test
   public void post_stamp_saves_stamp_to_stamp_repository() throws Exception {
-    // When: get stamps is called
+    // When: post stamps is called
     var result = mockMvc.perform(post("/stamps").contentType(APPLICATION_JSON).content("{\"name\": \"DC Collection - Alfred\"}"));
 
     // Then: the stamps are returned in json format

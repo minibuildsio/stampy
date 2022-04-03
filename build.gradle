@@ -14,8 +14,21 @@ testing {
       dependencies {
         implementation project
       }
+
+      targets {
+        all {
+          testTask.configure {
+            shouldRunAfter(test)
+          }
+        }
+      }
     }
   }
+}
+
+configurations {
+  integrationTestImplementation.extendsFrom implementation
+  integrationTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 repositories {
@@ -32,6 +45,8 @@ dependencies {
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
   integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+  integrationTestImplementation 'org.testcontainers:postgresql:1.16.3'
+  integrationTestImplementation 'org.assertj:assertj-db:2.0.2'
 }
 
 tasks.named('test') {

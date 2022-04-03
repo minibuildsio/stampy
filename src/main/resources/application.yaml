@@ -6,8 +6,8 @@ spring:
         ddl-auto: none
         show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/stampydb
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/stampydb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
   flyway:
     locations: classpath:db/migration
