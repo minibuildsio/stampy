@@ -46,6 +46,8 @@ dependencies {
 
   integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
   integrationTestImplementation 'org.testcontainers:postgresql:1.16.3'
+  integrationTestImplementation 'org.testcontainers:junit-jupiter:1.16.3'
+
   integrationTestImplementation 'org.assertj:assertj-db:2.0.2'
 }
 
