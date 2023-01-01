@@ -1,17 +1,19 @@
 package co.uk.howardpaget.stampy;
 
 
-import co.uk.howardpaget.stampy.util.PostgresContainer;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.db.type.Request;
 import org.assertj.db.type.Table;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.sql.DataSource;
 
@@ -22,16 +24,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Testcontainers
 public class StampyApplicationTest {
+  private static final String POSTGRES_IMAGE = "postgres:11.1";
 
-  @ClassRule
-  public static PostgresContainer postgreSQLContainer = PostgresContainer.getInstance();
+  @Container
+  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer(POSTGRES_IMAGE).withDatabaseName("stampydb");
 
   @Autowired
   MockMvc mockMvc;
 
   @Autowired
   DataSource dataSource;
+
+  @BeforeAll
+  static void beforeAll() {
+    System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
+    System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
+    System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
+  }
 
   @Test
   void stamp_table_is_created_on_start_up() {
