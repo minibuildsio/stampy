@@ -9,7 +9,7 @@ The integration tests are in a separate folder to the unit tests called `integra
 ### Start Postgres in a Docker container
 
 ```
-docker run --name stampydb -d -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=stampydb postgres
+docker-compose -f localenv/docker-compose.yaml up -d
 ```
 
 ### Run the bootRun task
