@@ -9,9 +9,13 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: none
         show-sql: true
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/stampydb}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USERNAME:dbuser}
+    password: ${DB_PASSWORD:dbuserpassword}
+
   flyway:
-    locations: classpath:db/migration
+    url: ${FLYWAY_DB_URL:jdbc:postgresql://localhost:5432/stampydb}
+    user: ${FLYWAY_DB_USERNAME:postgres}
+    password: ${FLYWAY_DB_PASSWORD:postgres}

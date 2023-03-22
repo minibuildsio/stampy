@@ -1,12 +1,14 @@
 version: "3.3"
 services:
   db:
-    image: postgis/postgis
+    image: postgres
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=stampydb
     ports:
       - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   pgadmin:
     image: dpage/pgadmin4

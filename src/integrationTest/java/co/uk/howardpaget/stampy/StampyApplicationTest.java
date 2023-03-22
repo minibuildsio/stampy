@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -29,7 +30,9 @@ public class StampyApplicationTest {
   private static final String POSTGRES_IMAGE = "postgres:11.1";
 
   @Container
-  private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer(POSTGRES_IMAGE).withDatabaseName("stampydb");
+  private static final PostgreSQLContainer postgreSQLContainer = (PostgreSQLContainer) new PostgreSQLContainer(POSTGRES_IMAGE)
+      .withDatabaseName("stampydb")
+      .withFileSystemBind("src/integrationTest/resources/init.sql", "/docker-entrypoint-initdb.d/init.sql", BindMode.READ_ONLY);
 
   @Autowired
   MockMvc mockMvc;
@@ -40,8 +43,10 @@ public class StampyApplicationTest {
   @BeforeAll
   static void beforeAll() {
     System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
-    System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
-    System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
+
+    System.setProperty("FLYWAY_DB_URL", postgreSQLContainer.getJdbcUrl());
+    System.setProperty("FLYWAY_DB_USERNAME", postgreSQLContainer.getUsername());
+    System.setProperty("FLYWAY_DB_PASSWORD", postgreSQLContainer.getPassword());
   }
 
   @Test
