@@ -3,6 +3,7 @@
 Stampy is a simple stamp collection tracker app written to demo:
 - Gradle integration tests and test containers: https://howardpaget.co.uk/posts/gradle-integration-tests/
 - Flyway database migrations: https://www.minibuilds.io/posts/spring-boot-flyway-database-migration/
+- Auth using Spring Security and JWTs: https://www.minibuilds.io/posts/spring-boot-jwt-auth/
 
 The integration tests are in a separate folder to the unit tests called `integrationTest`. The Gradle related set up can be found in `build.gradle` under `testing`. The integration tests are set up to automatically run as part of the build (after the regular tests) but can separately by running the `ingtegrationTest` task.
 

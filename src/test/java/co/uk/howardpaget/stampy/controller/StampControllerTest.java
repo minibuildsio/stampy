@@ -2,6 +2,8 @@ package co.uk.howardpaget.stampy.controller;
 
 import co.uk.howardpaget.stampy.entity.StampEntity;
 import co.uk.howardpaget.stampy.repository.StampRepository;
+import co.uk.howardpaget.stampy.repository.UserRepository;
+import com.auth0.jwt.JWT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,7 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Date;
 
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,11 +27,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class StampControllerTest {
 
+  private final static String AUTH = "Bearer " + JWT.create()
+      .withSubject("ducky")
+      .withArrayClaim("roles", new String[]{})
+      .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000))
+      .sign(HMAC512("a-secret"));
+
   @Autowired
   MockMvc mockMvc;
 
   @MockBean
   StampRepository stampRepository;
+
+  @MockBean
+  UserRepository userRepository;
 
   @Test
   public void get_stamp_returns_stamps_from_stamp_repository_as_json() throws Exception {
@@ -35,7 +48,7 @@ class StampControllerTest {
     when(stampRepository.findAll()).thenReturn(Arrays.asList(new StampEntity("Halfpenny Rose Red"), new StampEntity("One Shilling embossed")));
 
     // When: get stamps is called
-    var result = mockMvc.perform(get("/stamps"));
+    var result = mockMvc.perform(get("/stamps").header("Authorization", AUTH));
 
     // Then: the stamps are returned in json format
     result
@@ -50,7 +63,10 @@ class StampControllerTest {
   @Test
   public void post_stamp_saves_stamp_to_stamp_repository() throws Exception {
     // When: post stamps is called
-    var result = mockMvc.perform(post("/stamps").contentType(APPLICATION_JSON).content("{\"name\": \"DC Collection - Alfred\"}"));
+    var result = mockMvc.perform(post("/stamps")
+        .header("Authorization", AUTH)
+        .contentType(APPLICATION_JSON)
+        .content("{\"name\": \"DC Collection - Alfred\"}"));
 
     // Then: the stamps are returned in json format
     result.andExpect(status().isOk());
@@ -65,7 +81,7 @@ class StampControllerTest {
     when(stampRepository.existsById(eq(10L))).thenReturn(true);
 
     // When: delete stamps with id = 10 is called
-    var result = mockMvc.perform(delete("/stamps/10"));
+    var result = mockMvc.perform(delete("/stamps/10").header("Authorization", AUTH));
 
     // Then: success is returned
     result.andExpect(status().isOk());
@@ -80,7 +96,7 @@ class StampControllerTest {
     when(stampRepository.existsById(eq(10L))).thenReturn(false);
 
     // When: delete stamps with id = 10 is called
-    var result = mockMvc.perform(delete("/stamps/10"));
+    var result = mockMvc.perform(delete("/stamps/10").header("Authorization", AUTH));
 
     // Then: success is returned
     result.andExpect(status().isNotFound());

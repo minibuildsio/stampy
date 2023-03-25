@@ -22,7 +22,7 @@ public class StampController {
 
   @PostMapping("/stamps")
   public StampEntity createStamp(@RequestBody StampRequest request) {
-    return stampRepository.save(new StampEntity(request.getName()));
+    return stampRepository.save(new StampEntity(request.name()));
   }
 
   @DeleteMapping("/stamps/{id}")
